@@ -9,6 +9,7 @@ import javax.sql.DataSource;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +29,18 @@ import com.salesOrder.repository.SalesOrderRepository;
 import com.salesOrder.service.SalesOrderService;
 
 @RestController
+@RequestMapping("/service3")
+//@RibbonClient(name="item-service",configuration=SalesOrderServiceRibbonConfig.class)
 public class SalesOrderController{
+	@Autowired
+	RestTemplate rest;
 	
 	@Bean
 	RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
+	
+	 
 	
 	@Bean
 	CommandLineRunner addPersons(CustomerRepository repo){
@@ -64,7 +71,7 @@ public class SalesOrderController{
 		return this.dbinfo;
 	}
 	@Autowired
-	OrderLineItemRepository repository;
+	OrderLineItemRepository orderLineItemRepository;
 	
 	@Autowired
 	SalesOrderService salesOrderService;
@@ -72,27 +79,16 @@ public class SalesOrderController{
 	@Autowired
 	SalesOrderRepository salesrepository;
 	
-	
 	@PostMapping("/orders")	
 	public String addOrder(@RequestBody Order order) throws Exception {
-		
-		//try {
-			salesOrderService.add(order);
-		/*} catch (CustomerNotFoundException e) {
-			e.printStackTrace();
-			return e.getMessage();	
-		}catch (ItemNotFoundException e) {
-			e.printStackTrace();
-			return e.getMessage();	
-		}*/
-		return "Order received successfuly";		
+			String s=salesOrderService.add(order);
+			return s;
 	}
-	
 	
 	
 	@GetMapping("/orders1")
 	public List<Order_Line_Item> getOrde() {
-		return (List<Order_Line_Item>)repository.findAll();
+		return (List<Order_Line_Item>)orderLineItemRepository.findAll();
 		
 	}
 	

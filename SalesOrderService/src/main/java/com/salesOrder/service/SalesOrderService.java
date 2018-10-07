@@ -10,5 +10,4 @@ import com.salesOrder.exception.ItemNotFoundException;
 public interface SalesOrderService {
 	public String add(Order order)throws CustomerNotFoundException,ItemNotFoundException;
 	public void addCustomer(Customer_SOS cust);
-
 }

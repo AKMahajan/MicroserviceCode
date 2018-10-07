@@ -3,6 +3,7 @@ package com.customer;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.annotation.Bean;
 
 import com.customer.domain.Customer;
@@ -10,7 +11,7 @@ import com.customer.repository.CustomerRepository;
 
 
 @SpringBootApplication
-//@EnableEurekaClient
+@EnableEurekaClient
 public class CustomerServiceApplication {
 
 	public static void main(String[] args) {
