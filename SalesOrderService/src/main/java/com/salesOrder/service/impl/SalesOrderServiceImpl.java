@@ -7,12 +7,12 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.netflix.appinfo.InstanceInfo;
-import com.netflix.discovery.EurekaClient;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.salesOrder.bean.Item;
@@ -37,8 +37,8 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 	@Autowired
 	RestTemplate restTemplate;
 	@Autowired
-	EurekaClient  discoveryClient;
-	
+	LoadBalancerClient  loadBalancerClient;
+	//EurekaClient discoveryClient;
 
 	
 	@Override	
@@ -103,8 +103,10 @@ public class SalesOrderServiceImpl implements SalesOrderService{
 		
 	}
 	String  getItemServiceUrl() {
-		InstanceInfo instance=discoveryClient.getNextServerFromEureka("ITEM-SERVICE", false);
-		String url=instance.getHomePageUrl();
+		//InstanceInfo instance=discoveryClient.getNextServerFromEureka("ITEM-SERVICE", false);
+		ServiceInstance instance=loadBalancerClient.choose("ITEM-SERVICE");
+		//String url=instance.getHomePageUrl();
+		String url=instance.getUri().toString();
 		return url;
 	}
 
